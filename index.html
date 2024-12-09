@@ -1,0 +1,286 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <title>ワークシート</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f4f7fc;
+      color: #333;
+      margin: 0;
+      padding: 0;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    body.dark-mode {
+      background-color: #333;
+      color: #f4f7fc;
+    }
+
+    #controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1200px;
+      margin: 20px auto;
+      padding: 0 20px;
+    }
+
+    #toggle-dark-mode {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      transition: background-color 0.3s ease;
+    }
+
+    #toggle-dark-mode:hover {
+      background-color: #0056b3;
+    }
+
+    #worksheet-links {
+      max-width: 1200px;
+      margin: 40px auto;
+      padding: 20px;
+    }
+
+    .day-section {
+      margin-bottom: 40px;
+    }
+
+    .day-title {
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+
+    .worksheet-card {
+      background-color: #ffffff;
+      border-radius: 12px;
+      padding: 15px;
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      margin-bottom: 10px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+    }
+
+    body.dark-mode .worksheet-card {
+      background-color: #444;
+      color: white;
+    }
+
+    .worksheet-card a {
+      text-decoration: none;
+      color: inherit;
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .highlight {
+      background-color: #007bff;
+      color: white;
+    }
+
+    .extra-section {
+      margin-bottom: 40px;
+      padding: 20px;
+      background-color: #e6f7ff;
+      border-radius: 10px;
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .extra-section .extra-title {
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="current-time-info" style="text-align: center; margin: 20px 0; font-size: 20px;">
+    <p id="current-time">現在の時間: --:--</p>
+    <p id="current-period">現在の授業: -</p>
+  </div>
+
+  <div class="extra-section">
+    <h2 class="extra-title">プロジェクトシート</h2>
+    <div class="worksheet-card">
+      <a href="https://docs.google.com/spreadsheets/d/1jgXhiN8HFjyJ-pgesb2G0_Y8xxZCoz0I5aWGLa6yYNs/edit?gid=1783021986#gid=1783021986" target="_blank">
+        プロジェクトシート
+      </a>
+    </div>
+  </div>
+  <div class="extra-section">
+    <h2 class="extra-title">その他</h2>
+    <div class="worksheet-card">
+      <a href="https://classroom.google.com/w/NjU2MTczMTA5OTI5/tc/NjgyMzIwMTUyNTk3" target="_blank">
+        その他
+      </a>
+    </div>
+  </div>
+
+  <div class="extra-section">
+    <h2 class="extra-title">校外学習</h2>
+    <div class="worksheet-card">
+      <a href="https://classroom.google.com/w/NjU2MTczMTA5OTI5/tc/Njc4MzYxODkxODQ1" target="_blank">
+        校外学習
+      </a>
+    </div>
+  </div>
+
+  <div class="extra-section">
+    <h2 class="extra-title">プログラミング自習</h2>
+    <div class="worksheet-card">
+      <a href="https://classroom.google.com/w/NjU2MTczMTA5OTI5/tc/Njc1OTkyMTk5OTAw" target="_blank">
+        プログラミング自習
+      </a>
+    </div>
+  </div>
+  
+
+  <div id="worksheet-links"></div>
+  
+
+  <script>
+  const timetable = {
+    月: ["サークル活動", "サークル活動", "進路準備(1,2)", "昼休み", "リベラルアーツ基礎(人文科学)", "クリエイティブ検定", "一般教養数学"],
+    火: ["リベラルアーツ応用", "リベラルアーツ応用", "キャンパス授業", "昼休み", "総合型選抜対策(応用)", "中国語初級", "中国語初級"],
+    水: ["プロジェクトNα", "プロジェクトNβ", "総合型選抜対策(標準)", "昼休み", "リベラルアーツ基礎(社会科学)", "統計検定対策4級", "ゼミナール"],
+    木: ["プロジェクトN基礎", "プロジェクトN応用", "キャンパス授業", "昼休み", "アート・デザイン", "アート・デザイン", "コミュニティ活動"],
+    金: ["プロジェクトNα", "プロジェクトNβ", "目標設定", "昼休み", "リベラルアーツ基礎(自然科学)", "英語検定対策2級", "キャンパス授業"]
+  };
+
+  const worksheets = [
+    { name: '進路準備(1,2)', url: 'https://classroom.google.com/w/NjU2MTczMTA5OTI5/tc/Njg0MDQ2OTc0Nzcw' },
+
+    { name: 'プロジェクトシート', url: 'https://docs.google.com/spreadsheets/d/1jgXhiN8HFjyJ-pgesb2G0_Y8xxZCoz0I5aWGLa6yYNs/edit?gid=1783021986#gid=1783021986' },
+    { name: '英語検定対策2級', url: 'https://classroom.google.com/w/NjU2MTczMTA5OTI5/tc/NzIxMTMzOTQzNTcw' },
+    { name: '統計検定対策4級', url: 'https://classroom.google.com/w/NjU2MTczMTA5OTI5/tc/NzE5NTYzODg1MjY4' },
+    { name: '目標設定', url: 'https://classroom.google.com/w/NjU2MTczMTA5OTI5/tc/Njc1NDAwMzMwNzA4' },
+    { name: 'コミュニティ活動', url: 'https://classroom.google.com/w/NjU2MTczMTA5OTI5/tc/NjgyMjE1MDEzNDE5' },
+    { name: 'ゼミナール', url: 'https://classroom.google.com/w/NjU2MTczMTA5OTI5/tc/NjgyNzk2NTk5NDUy' },
+    { name: 'サークル活動', url: 'https://classroom.google.com/w/NjU2MTczMTA5OTI5/tc/NjkyODQ3MTA0ODEy' },
+    { name: 'キャンパス授業', url: 'https://classroom.google.com/w/NjU2MTczMTA5OTI5/tc/NjkyODQ2MDUyMDM5' },
+    { name: '進路準備(1,2)', url: 'https://classroom.google.com/w/NjU2MTczMTA5OTI5/tc/Njg0MDQ2OTc0Nzcw' },
+    { name: '一般教養数学', url: 'https://www.nnn.ed.nico/courses/302' },
+    { name: 'プロジェクトN基礎', url: 'https://classroom.google.com/w/NjU2MTczMTA5OTI5/tc/Njc2MDkxNDEzNjkz' },
+    { name: 'プロジェクトN応用', url: 'https://classroom.google.com/w/NjU2MTczMTA5OTI5/tc/Njc2MDg3MTQ2OTA4' },
+    { name: 'プロジェクトNα', url: 'https://classroom.google.com/w/NjU2MTczMTA5OTI5/tc/Njc1NjY5OTcwOTUw' },
+    { name: 'プロジェクトNβ', url: 'https://classroom.google.com/w/NjU2MTczMTA5OTI5/tc/Njc4NTI4ODA3OTIy' },
+    { name: 'リベラルアーツ基礎(自然科学)', url: 'https://classroom.google.com/w/NjU2MTczMTA5OTI5/tc/Njc4NDE2OTgxNDgy' },
+    { name: 'アート・デザイン', url: 'https://classroom.google.com/w/NjU2MTczMTA5OTI5/tc/Njc4NDE2ODk1MzY2' },
+    { name: 'リベラルアーツ基礎(社会科学)', url: 'https://classroom.google.com/w/NjU2MTczMTA5OTI5/tc/Njc4NDE2NzE1MTEx' },
+    { name: 'リベラルアーツ応用', url: 'https://classroom.google.com/w/NjU2MTczMTA5OTI5/tc/Njc4NDE2MTc1MzI4' },
+    { name: '総合型選抜対策(応用)', url: 'https://classroom.google.com/w/NjU2MTczMTA5OTI5/tc/Njc1Mzk4MzEyMjA4' },
+    { name: '総合型選抜対策(標準)', url: 'https://classroom.google.com/w/NjU2MTczMTA5OTI5/tc/Njc1NDAzMjIyMTE0' },
+    { name: 'リベラルアーツ基礎(人文科学)', url: 'https://classroom.google.com/w/NjU2MTczMTA5OTI5/tc/Njc4MzYyNDM4MTEw' }
+  ];
+
+  const worksheetLinks = document.getElementById('worksheet-links');
+
+
+  for (const day in timetable) {
+    const daySection = document.createElement('div');
+    daySection.classList.add('day-section');
+
+    const dayTitle = document.createElement('h2');
+    dayTitle.classList.add('day-title');
+    dayTitle.textContent = `${day}曜日`;
+
+    daySection.appendChild(dayTitle);
+
+    timetable[day].forEach(subject => {
+      const worksheet = worksheets.find(w => w.name === subject);
+      if (worksheet) {
+        const card = document.createElement('div');
+        card.classList.add('worksheet-card');
+
+        const link = document.createElement('a');
+        link.href = worksheet.url;
+        link.textContent = worksheet.name;
+        link.target = '_blank';
+
+        card.appendChild(link);
+        daySection.appendChild(card);
+      }
+    });
+
+    worksheetLinks.appendChild(daySection);
+  }
+
+  // 現在の時間と授業を更新する関数
+  const updateCurrentTimeInfo = () => {
+    const now = new Date
+
+    const hours = now.getHours().toString().padStart(2, '0');
+    const minutes = now.getMinutes().toString().padStart(2, '0');
+    const formattedTime = `${hours}:${minutes}`;
+
+    const nowInMinutes = now.getHours() * 60 + now.getMinutes();
+    const periods = [
+      { start: 9 * 60 + 45, end: 10 * 60 + 35 },
+      { start: 10 * 60 + 45, end: 11 * 60 + 35 },
+      { start: 11 * 60 + 45, end: 12 * 60 + 35 },
+      { start: 12 * 60 + 35, end: 13 * 60 + 15 },
+      { start: 13 * 60 + 15, end: 14 * 60 + 5 },
+      { start: 14 * 60 + 15, end: 15 * 60 + 5 },
+      { start: 15 * 60 + 15, end: 16 * 60 + 5 }
+    ];
+
+    const currentPeriodIndex = periods.findIndex(
+      period => nowInMinutes >= period.start && nowInMinutes < period.end
+    );
+
+    const currentDay = ["日", "月", "火", "水", "木", "金", "土"][now.getDay()];
+    const currentSubjects = currentPeriodIndex >= 0 && timetable[currentDay]
+      ? timetable[currentDay][currentPeriodIndex]
+      : null;
+
+    document.getElementById('current-time').textContent = `現在の時間: ${formattedTime}`;
+    document.getElementById('current-period').textContent = `現在の授業: ${currentSubjects || 'なし'}`;
+
+    
+    document.querySelectorAll('.worksheet-card').forEach(card => {
+      card.classList.remove('highlight');
+    });
+
+    if (currentSubjects) {
+    const cards = document.querySelectorAll('.worksheet-card');
+    cards.forEach(card => {
+      const link = card.querySelector('a');
+      if (link) {
+
+        if ((currentSubjects.includes('プロジェクトNα') || currentSubjects.includes('プロジェクトNβ')) && 
+    (link.textContent === 'プロジェクトNα' || link.textContent === 'プロジェクトNβ')) {
+  card.classList.add('highlight');
+}
+
+else if (currentSubjects.includes(link.textContent)) {
+  card.classList.add('highlight');
+}
+
+        if ((currentSubjects.includes('プロジェクトN基礎') || currentSubjects.includes('プロジェクトN応用')) && 
+            (link.textContent === 'プロジェクトN基礎' || link.textContent === 'プロジェクトN応用')) {
+          card.classList.add('highlight');
+        }
+        
+
+      }
+    });
+  }
+};
+
+  
+  updateCurrentTimeInfo();
+  setInterval(updateCurrentTimeInfo, 1000);
+</script>
+
+    updateCurrentTimeInfo();
+  </script>
+</body>
+</html>
