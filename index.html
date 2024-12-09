@@ -17,6 +17,8 @@
       background-color: #333;
       color: #f4f7fc;
     }
+    
+  
 
     #controls {
       display: flex;
@@ -26,6 +28,13 @@
       margin: 20px auto;
       padding: 0 20px;
     }
+    .worksheet-card a {
+  display: block; /* 全体をクリック可能に */
+  width: 100%; /* カード全体の幅をカバー */
+  height: 100%; /* カード全体の高さをカバー */
+  text-decoration: none;
+  color: inherit;
+}
 
     #toggle-dark-mode {
       padding: 10px 20px;
@@ -37,6 +46,9 @@
       border-radius: 8px;
       transition: background-color 0.3s ease;
     }
+
+
+
 
     #toggle-dark-mode:hover {
       background-color: #0056b3;
@@ -51,6 +63,15 @@
     .day-section {
       margin-bottom: 40px;
     }
+    #search-bar {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+#search-bar:focus {
+  border-color: #007bff;
+  box-shadow: 0 6px 12px rgba(0, 123, 255, 0.2);
+}
 
     .day-title {
       font-size: 24px;
@@ -84,6 +105,7 @@
       background-color: #007bff;
       color: white;
     }
+    
 
     .extra-section {
       margin-bottom: 40px;
@@ -99,6 +121,15 @@
       margin-bottom: 10px;
     }
   </style>
+  <div id="search-container" style="text-align: center; margin: 20px;">
+    <input
+      type="text"
+      id="search-bar"
+      placeholder="検索ワードを入力..."
+      style="width: 80%; padding: 10px; font-size: 16px; border: 1px solid #ccc; border-radius: 8px;"
+    />
+  </div>
+  
 </head>
 <body>
 
@@ -147,7 +178,9 @@
   
 
   <script>
+    
   const timetable = {
+    
     月: ["サークル活動", "サークル活動", "進路準備(1,2)", "昼休み", "リベラルアーツ基礎(人文科学)", "クリエイティブ検定", "一般教養数学"],
     火: ["リベラルアーツ応用", "リベラルアーツ応用", "キャンパス授業", "昼休み", "総合型選抜対策(応用)", "中国語初級", "中国語初級"],
     水: ["プロジェクトNα", "プロジェクトNβ", "総合型選抜対策(標準)", "昼休み", "リベラルアーツ基礎(社会科学)", "統計検定対策4級", "ゼミナール"],
@@ -156,6 +189,7 @@
   };
 
   const worksheets = [
+    
     { name: '進路準備(1,2)', url: 'https://classroom.google.com/w/NjU2MTczMTA5OTI5/tc/Njg0MDQ2OTc0Nzcw' },
 
     { name: 'プロジェクトシート', url: 'https://docs.google.com/spreadsheets/d/1jgXhiN8HFjyJ-pgesb2G0_Y8xxZCoz0I5aWGLa6yYNs/edit?gid=1783021986#gid=1783021986' },
@@ -209,11 +243,70 @@
         daySection.appendChild(card);
       }
     });
+    document.getElementById('search-bar').addEventListener('input', function () {
+  const query = this.value.toLowerCase();
+  const cards = document.querySelectorAll('.worksheet-card');
+  document.getElementById('search-bar').addEventListener('input', function () {
+  const query = this.value.toLowerCase();
+
+
+  const allSections = document.querySelectorAll('.day-section, .extra-section');
+
+  allSections.forEach(section => {
+    const cards = section.querySelectorAll('.worksheet-card');
+    let hasMatch = false;
+
+    cards.forEach(card => {
+      const text = card.textContent.toLowerCase();
+      if (text.includes(query)) {
+        card.style.display = ''; 
+        hasMatch = true; 
+      } else {
+        card.style.display = 'none'; 
+      }
+    });
+
+    
+    section.style.display = hasMatch ? '' : 'none';
+  });
+});
+
+  cards.forEach(card => {
+    const text = card.textContent.toLowerCase();
+    if (text.includes(query)) {
+      card.style.display = ''; 
+    } else {
+      card.style.display = 'none'; 
+    }
+  });
+});
+document.getElementById('search-bar').addEventListener('input', function () {
+  const query = this.value.toLowerCase();
+  const daySections = document.querySelectorAll('.day-section');
+
+  daySections.forEach(section => {
+    const cards = section.querySelectorAll('.worksheet-card');
+    let hasMatch = false;
+
+    cards.forEach(card => {
+      const text = card.textContent.toLowerCase();
+      if (text.includes(query)) {
+        card.style.display = ''; 
+        hasMatch = true; 
+      } else {
+        card.style.display = 'none'; 
+      }
+    });
+
+    
+    section.style.display = hasMatch ? '' : 'none';
+  });
+});
 
     worksheetLinks.appendChild(daySection);
   }
 
-  // 現在の時間と授業を更新する関数
+  
   const updateCurrentTimeInfo = () => {
     const now = new Date
 
@@ -280,7 +373,7 @@ else if (currentSubjects.includes(link.textContent)) {
   setInterval(updateCurrentTimeInfo, 1000);
 </script>
 
-    updateCurrentTimeInfo();
   </script>
 </body>
 </html>
+
